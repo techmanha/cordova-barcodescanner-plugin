@@ -65,6 +65,8 @@ public class BarcodeScanner extends CordovaPlugin {
 
     private Boolean writeSettings;
 
+    private Intent intentScan;
+
     /**
      * Constructor.
      */
@@ -166,7 +168,10 @@ public class BarcodeScanner extends CordovaPlugin {
                 callbackContext.error("User did not specify data to encode");
                 return true;
             }
-        } else if (action.equals(SCAN)) {
+        } else if (action.equals("cancel")) {
+            cancel();
+        }
+        else if (action.equals(SCAN)) {
             scan();
         } else {
             return false;
@@ -178,7 +183,7 @@ public class BarcodeScanner extends CordovaPlugin {
      * Starts an intent to scan and decode a barcode.
      */
     public void scan() {
-        Intent intentScan = new Intent(SCAN_INTENT);
+         intentScan = new Intent(SCAN_INTENT);
         intentScan.addCategory(Intent.CATEGORY_DEFAULT);
         // avoid calling other phonegap apps
         intentScan.setPackage(this.cordova.getActivity().getApplicationContext().getPackageName());
@@ -186,6 +191,20 @@ public class BarcodeScanner extends CordovaPlugin {
         this.cordova.startActivityForResult((CordovaPlugin) this, intentScan, REQUEST_CODE);
     }
 
+    public void cancel()
+    {
+        if(intentScan!=null)
+        {
+            this.cordova.getActivity().finishActivity(REQUEST_CODE);
+            JSONObject obj = new JSONObject();
+            this.callbackContext.success(obj);
+        }
+        else
+        {
+            this.callbackContext.error("Scanner not running");
+        }
+            
+    }
     /**
      * Called when the barcode scanner intent completes.
      *

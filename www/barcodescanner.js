@@ -97,6 +97,10 @@ var ScannerLoader = function (require, exports, module) {
         exec(successCallback, errorCallback, 'BarcodeScanner', 'scan', []);
     };
 
+    BarcodeScanner.prototype.cancel = function (successCallback, errorCallback) {
+       exec(successCallback, errorCallback, 'BarcodeScanner', 'cancel', []);
+    };
+
     //-------------------------------------------------------------------
     BarcodeScanner.prototype.encode = function (type, data, successCallback, errorCallback, options) {
         if (errorCallback == null) {
